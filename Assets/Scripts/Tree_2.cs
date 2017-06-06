@@ -388,7 +388,7 @@ public class Tree_2 : MonoBehaviour
         iTween.ScaleTo(kid, iTween.Hash("z", 0, "y", 0, "x", 0));
 
         //move back to startpoint
-        iTween.MoveUpdate(kid, iTween.Hash("z", startPoint.z, "y", startPoint.y, "x", startPoint.x, "islocal", true, "time", 0.7, "looktarget", updatePoint));
+        iTween.MoveUpdate(kid, iTween.Hash("z", startPoint.z, "y", startPoint.y, "x", startPoint.x, "islocal", true, "time", 0.7, "looktarget", updatePoint, "delay, 1.0f, 'oncomplete', 'scaleSecond"));
 
 
     }
