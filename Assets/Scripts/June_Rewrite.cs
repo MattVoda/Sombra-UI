@@ -69,7 +69,7 @@ public class June_Rewrite : MonoBehaviour {
         int[] randFileLocations = new int[numFoldersInContents];
         for (int j = 0; j < numFoldersInContents; j++) {
             int randIndex = Random.Range(1, contentsSize + 1);
-            contents[randIndex] = Instantiate(folderPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+            contents[randIndex] = Instantiate(folderPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, gameObject.transform);
             contents[randIndex].GetComponent<June_Rewrite>().originSetByParent = true; //mark this folder as a child
         }
     }
@@ -97,11 +97,17 @@ public class June_Rewrite : MonoBehaviour {
             interpolationVectorsArray[i].x = segmentVector.x * (i + 1) * -1 * interpMultiplier;
         }
 
+        //foreach (Vector3 v3 in interpolationVectorsArray) {
+        //    print(v3);
+        //}
+        
+
         if (distanceVector.magnitude > minimumPullDistance) {
             if (popped) {
-                Splay();
+                //Splay();
             } else { // a first pop!
-                InstantiateContents();
+                //InstantiateContents();
+                print("contentsInstantiatedNow!");
                 popped = true;
             }
         } else {
@@ -119,6 +125,7 @@ public class June_Rewrite : MonoBehaviour {
 
         for (int i = 0; i < contentsSize; i++) {
             kid = contents[i];
+
             if (kid.tag == "File") {
                 kid.transform.localScale = fileScaleVector;
             } else {
@@ -126,13 +133,15 @@ public class June_Rewrite : MonoBehaviour {
                 kid.GetComponent<SphereCollider>().radius = folderScaleVector.magnitude; // scale collider to prevent rigidbody overlap
             }
 
+            Vector3 temp = interpolationVectorsArray[i];
+
             if (!LookAtHMD) {
-                iTween.MoveUpdate(kid, iTween.Hash("z", interpolationVectorsArray[i].z, "y", interpolationVectorsArray[i].y, "x", interpolationVectorsArray[i].x, "islocal", true, "time", 0.7));
-                kid.GetComponent<June_Rewrite>().originPoint = new Vector3(interpolationVectorsArray[i].x, interpolationVectorsArray[i].y, interpolationVectorsArray[i].z);
+                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7));
+                kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
             } else {
-                iTween.MoveUpdate(kid, iTween.Hash("z", interpolationVectorsArray[i].z, "y", interpolationVectorsArray[i].y, "x", interpolationVectorsArray[i].x, "islocal", true, "time", 0.7, "looktarget", sphereCenter));
+                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7, "looktarget", sphereCenter));
                 //iTween.MoveUpdate(kid, iTween.Hash("z", newZ, "y", newY, "x", newX, "islocal", true, "time", 0.7, "looktarget", HMD.transform.position));
-                kid.GetComponent<June_Rewrite>().originPoint = new Vector3(interpolationVectorsArray[i].x, interpolationVectorsArray[i].y, interpolationVectorsArray[i].z);
+                kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
             }
         }
     }
