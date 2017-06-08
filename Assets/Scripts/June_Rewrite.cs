@@ -10,35 +10,33 @@ public class June_Rewrite : MonoBehaviour {
     public GameObject originPrefab;
 
     [Header("Interpolation")]
-    private GameObject[] contents;
     public int contentsSize = 7;
     public int numFoldersInContents = 1;
-
+    private GameObject[] contents;
     private Vector3[] interpolationVectorsArray;
-    public Vector3 originPoint;
     private GameObject originGO;
     private Vector3 sphereCenter;
     private Vector3 distanceVector;
     private Vector3 segmentVector;
     private bool popped = false;
 
+    [Space(10)]
     [Header("Child Options")]
-    private GameObject kid;
     public float minimumPullDistance = 0.2f; // 2x sphere size
     public float interpMultiplier = 10f;
     public float kidHeightWidth = 1f;
     public float kidThickness = 0.3f;
     public float folderScaler = 0.5f;
+    public bool LookAtHMD = false;
     private float newZ, newY, newX;
+    private GameObject kid;
 
     [Header("NO-EDIT: for telling kids their origin")]
     public bool originSetByParent = false;
-
-    public bool LookAt = false;
+    public Vector3 originPoint;
     private SteamVR_Camera HMD;
 
 
-    // Use this for initialization
     void Start () {
         //set HMD for lookAt() vector  //TODO: default HMD position to some generic Vector3 for tile LookAt()
         HMD = SteamVR_Render.Top();
@@ -112,7 +110,6 @@ public class June_Rewrite : MonoBehaviour {
                 popped = false;
             }
         }
-
     }
 
     void Splay() {
@@ -126,9 +123,10 @@ public class June_Rewrite : MonoBehaviour {
                 kid.transform.localScale = fileScaleVector;
             } else {
                 kid.transform.localScale = folderScaleVector;
+                kid.GetComponent<SphereCollider>().radius = folderScaleVector.magnitude; // scale collider to prevent rigidbody overlap
             }
 
-            if (!LookAt) {
+            if (!LookAtHMD) {
                 iTween.MoveUpdate(kid, iTween.Hash("z", interpolationVectorsArray[i].z, "y", interpolationVectorsArray[i].y, "x", interpolationVectorsArray[i].x, "islocal", true, "time", 0.7));
                 kid.GetComponent<June_Rewrite>().originPoint = new Vector3(interpolationVectorsArray[i].x, interpolationVectorsArray[i].y, interpolationVectorsArray[i].z);
             } else {

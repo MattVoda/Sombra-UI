@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Hidden/AVProMovieCapture/RGBA2YCbCr" 
 {
 	Properties 
@@ -33,7 +35,7 @@ struct v2f {
 v2f vert( appdata_img v )
 {
 	v2f o;
-	o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+	o.pos = UnityObjectToClipPos (v.vertex);
 	o.uv = v.texcoord.xy;//TRANSFORM_TEX(v.texcoord, _MainTex);
 		
 	// Often in YCbCr modes we need to flip Y
