@@ -24,6 +24,7 @@ public class June_Rewrite : MonoBehaviour {
     [Header("Child Options")]
     public float minimumPullDistance = 0.2f; // 2x sphere size
     public float interpMultiplier = 10f;
+    public float kidScaleMultiplier = 1.5f;
     public float kidHeightWidth = 1f;
     public float kidThickness = 0.3f;
     public float folderScaler = 0.5f;
@@ -104,9 +105,9 @@ public class June_Rewrite : MonoBehaviour {
 
         if (distanceVector.magnitude > minimumPullDistance) {
             if (popped) {
-                //Splay();
+                Splay();
             } else { // a first pop!
-                //InstantiateContents();
+                InstantiateContents();
                 print("contentsInstantiatedNow!");
                 popped = true;
             }
@@ -119,7 +120,10 @@ public class June_Rewrite : MonoBehaviour {
     }
 
     void Splay() {
-        float kidScale = segmentVector.magnitude - minimumPullDistance; // *scaleMultiplier probably   //to account for min popping distance
+        float kidScale = segmentVector.magnitude; // *scaleMultiplier probably   //to account for min popping distance
+        //print("kidScale = " + kidScale);
+        //print("segmentVectorMagnitude = " + segmentVector.magnitude);
+        //print("minimumPull = " + minimumPullDistance);
         Vector3 fileScaleVector = new Vector3(Mathf.Clamp(kidScale, 0f, kidHeightWidth), Mathf.Clamp(kidScale, 0f, kidHeightWidth), Mathf.Clamp(kidScale / 20, 0f, kidThickness));
         Vector3 folderScaleVector = new Vector3(Mathf.Clamp(kidScale * folderScaler, 0f, kidHeightWidth), Mathf.Clamp(kidScale * folderScaler, 0f, kidHeightWidth), Mathf.Clamp(kidScale * folderScaler, 0f, kidHeightWidth));
 
@@ -133,16 +137,16 @@ public class June_Rewrite : MonoBehaviour {
                 kid.GetComponent<SphereCollider>().radius = folderScaleVector.magnitude; // scale collider to prevent rigidbody overlap
             }
 
-            Vector3 temp = interpolationVectorsArray[i];
+            //Vector3 temp = interpolationVectorsArray[i];
 
-            if (!LookAtHMD) {
-                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7));
-                kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
-            } else {
-                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7, "looktarget", sphereCenter));
-                //iTween.MoveUpdate(kid, iTween.Hash("z", newZ, "y", newY, "x", newX, "islocal", true, "time", 0.7, "looktarget", HMD.transform.position));
-                kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
-            }
+            //if (!LookAtHMD) {
+            //    iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7));
+            //    kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
+            //} else {
+            //    iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7, "looktarget", sphereCenter));
+            //    //iTween.MoveUpdate(kid, iTween.Hash("z", newZ, "y", newY, "x", newX, "islocal", true, "time", 0.7, "looktarget", HMD.transform.position));
+            //    kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
+            //}
         }
     }
 }

@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114342841627315436}
   - component: {fileID: 54107414885986728}
   - component: {fileID: 114472697520496558}
+  - component: {fileID: 114367105782747078}
   m_Layer: 0
   m_Name: justFolderSphere
   m_TagString: Folder
@@ -75,6 +76,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &33621425428161070
 MeshFilter:
@@ -111,6 +113,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverScale: 1.5
   rigidbody: {fileID: 0}
+--- !u!114 &114367105782747078
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1240932789036918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c388bff41862554fa83196a033d331e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114472697520496558
 MonoBehaviour:
   m_ObjectHideFlags: 1
