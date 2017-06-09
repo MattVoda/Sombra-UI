@@ -103,12 +103,12 @@ public class June_Rewrite : MonoBehaviour {
 
     void Interpolate() {
         distanceVector = sphereCenter - originPoint;
-        segmentVector = distanceVector / (contentsSize + 1);
+        segmentVector = distanceVector / (contentsSize + 2); //+2 to shorten the segments
 
         for (int i = 0; i < contentsSize; i++) {
-            interpolationVectorsArray[i].z = segmentVector.z * (i + 1) * -1 * interpMultiplier; //-1 to reverse direction away from user
-            interpolationVectorsArray[i].y = segmentVector.y * (i + 1) * -1 * interpMultiplier;
-            interpolationVectorsArray[i].x = segmentVector.x * (i + 1) * -1 * interpMultiplier;
+            interpolationVectorsArray[i].z = segmentVector.z * (i + 2) * -1 * interpMultiplier; //-1 to reverse direction away from user
+            interpolationVectorsArray[i].y = segmentVector.y * (i + 2) * -1 * interpMultiplier; // i + 2 to shift all items one notch away from sphereCenter
+            interpolationVectorsArray[i].x = segmentVector.x * (i + 2) * -1 * interpMultiplier;
         }
     }
 
