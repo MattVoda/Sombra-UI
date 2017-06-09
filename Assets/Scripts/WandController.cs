@@ -52,12 +52,15 @@ public class WandController : MonoBehaviour
 
             float distance;
             foreach (InteractableItem item in objectsHoveringOver) {
-                distance = (item.transform.position - transform.position).sqrMagnitude;
-                //using sqrMagnitude bc distance can be negative. we just want magnitude
+                //protecting against a problem where destroyed items still existed in this array
+                if (item != null) {
+                    distance = (item.transform.position - transform.position).sqrMagnitude;
+                    //using sqrMagnitude bc distance can be negative. we just want magnitude
 
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestItem = item;
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestItem = item;
+                    }
                 }
             }
 

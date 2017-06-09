@@ -22,7 +22,6 @@ public class June_Rewrite : MonoBehaviour {
     private float folderSphereColliderRadius = 0;
     private bool popped = false;
 
-    [Space(10)]
     [Header("File Options")]
     public float minimumPullDistance = 0.1f; // instantiates and destroy at this distance
     public float interpMultiplier = 10f;
@@ -71,7 +70,7 @@ public class June_Rewrite : MonoBehaviour {
         // then overwrite with randomly-placed folders
         int[] randFileLocations = new int[numFoldersInContents];
         for (int j = 0; j < numFoldersInContents; j++) {
-            int randIndex = Random.Range(1, contentsSize + 1);
+            int randIndex = Random.Range(1, contentsSize);
             contents[randIndex] = Instantiate(folderPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, gameObject.transform);
             //contents[randIndex].GetComponent<June_Rewrite>().originSetByParent = true; //mark this folder as a child
         }
@@ -145,6 +144,7 @@ public class June_Rewrite : MonoBehaviour {
     //        DestroyContents();
     //    }
     //}
+
     void DestroyContents() {
         foreach (GameObject go in contents) {
             GameObject.Destroy(go);
