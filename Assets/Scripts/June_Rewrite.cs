@@ -24,10 +24,11 @@ public class June_Rewrite : MonoBehaviour {
     [Header("Child Options")]
     public float minimumPullDistance = 0.2f; // 2x sphere size
     public float interpMultiplier = 10f;
-    public float kidScaleMultiplier = 1.5f;
+    public float kidScaleMultiplier = 8f;
     public float kidHeightWidth = 1f;
     public float kidThickness = 0.3f;
     public float folderScaler = 0.5f;
+    public float tweeningTime = 0.1f;
     public bool LookAtHMD = false;
     private float newZ, newY, newX;
     private GameObject kid;
@@ -63,8 +64,9 @@ public class June_Rewrite : MonoBehaviour {
     void InstantiateContents() {
         // First instantiate all as files
         for (int i = 0; i < contentsSize; i++) {
-            contents[i] = Instantiate(filePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
-            contents[i].transform.parent = gameObject.transform; //parent to this GO to keep neat
+            GameObject tempKid = Instantiate(filePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+            tempKid.transform.parent = gameObject.transform; //parent to this GO to keep neat
+            contents[i] = tempKid;
         }
         // then overwrite with randomly-placed folders
         int[] randFileLocations = new int[numFoldersInContents];
@@ -120,8 +122,8 @@ public class June_Rewrite : MonoBehaviour {
     }
 
     void Splay() {
-        float kidScale = segmentVector.magnitude; // *scaleMultiplier probably   //to account for min popping distance
-        //print("kidScale = " + kidScale);
+        float kidScale = segmentVector.magnitude * kidScaleMultiplier; // *scaleMultiplier probably   //to account for min popping distance
+        print("kidScale = " + kidScale);
         //print("segmentVectorMagnitude = " + segmentVector.magnitude);
         //print("minimumPull = " + minimumPullDistance);
         Vector3 fileScaleVector = new Vector3(Mathf.Clamp(kidScale, 0f, kidHeightWidth), Mathf.Clamp(kidScale, 0f, kidHeightWidth), Mathf.Clamp(kidScale / 20, 0f, kidThickness));
@@ -129,24 +131,21 @@ public class June_Rewrite : MonoBehaviour {
 
         for (int i = 0; i < contentsSize; i++) {
             kid = contents[i];
+            Vector3 temp = interpolationVectorsArray[i];
 
             if (kid.tag == "File") {
                 kid.transform.localScale = fileScaleVector;
             } else {
                 kid.transform.localScale = folderScaleVector;
                 kid.GetComponent<SphereCollider>().radius = folderScaleVector.magnitude; // scale collider to prevent rigidbody overlap
+                kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z); //untested 6/8
             }
 
-            //Vector3 temp = interpolationVectorsArray[i];
-
-            //if (!LookAtHMD) {
-            //    iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7));
-            //    kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
-            //} else {
-            //    iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", 0.7, "looktarget", sphereCenter));
-            //    //iTween.MoveUpdate(kid, iTween.Hash("z", newZ, "y", newY, "x", newX, "islocal", true, "time", 0.7, "looktarget", HMD.transform.position));
-            //    kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z);
-            //}
+            if (!LookAtHMD) {
+                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", sphereCenter));
+            } else {
+                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position)); //"looktarget", HMD.transform.position
+            }
         }
     }
 }
