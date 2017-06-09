@@ -7,12 +7,12 @@ public class Init_iTween_on_Kids : MonoBehaviour {
 
 
     private void Awake() {
-        
+        iTween.Init(this.gameObject);
     }
 
     // Use this for initialization
     void Start () {
-        iTween.Init(this.gameObject);
+        
     }
 	
 	// Update is called once per frame
