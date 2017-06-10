@@ -5,6 +5,7 @@ using UnityEngine;
 public class ReportEntry : MonoBehaviour {
 
     public Tree_2 tree;
+
     private Rigidbody rb;
 
     public int myIndex;
@@ -29,9 +30,9 @@ public class ReportEntry : MonoBehaviour {
 
     private void OnTriggerStay(Collider other) {
         touched += DC * Time.deltaTime;
-        //Debug.Log("touch = " + touched);
         if (touched >= 1) {
-            tree.ReportEntry(myIndex);
+            //tree.ReportEntry(myIndex);
+            gameObject.GetComponent<June_Rewrite>().enabled = true;
         }
     }
 

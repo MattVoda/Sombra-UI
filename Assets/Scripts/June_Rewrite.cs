@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class June_Rewrite : MonoBehaviour {
 
-    [Header("Prefabs")]
-    public GameObject folderPrefab;
-    public GameObject filePrefab;
-    public GameObject originPrefab;
+    [Header("Origin Management")]
+    public bool root = false;
+    private Vector3 originPoint;
+    private Dictionary<int, Vector3> folderPositionDictionary;
 
     [Header("Interpolation")]
     public int contentsSize = 7;
@@ -34,9 +34,11 @@ public class June_Rewrite : MonoBehaviour {
     private float newZ, newY, newX;
     private GameObject kid;
 
-    [Header("NO-EDIT: for telling kids their origin")]
-    public bool originSetByParent = false;
-    public Vector3 originPoint;
+    [Header("Prefabs")]
+    public GameObject folderPrefab;
+    public GameObject filePrefab;
+    public GameObject originPrefab;
+
     private SteamVR_Camera HMD;
 
 
@@ -47,17 +49,23 @@ public class June_Rewrite : MonoBehaviour {
 
         contents = new GameObject[contentsSize];
         interpolationVectorsArray = new Vector3[contentsSize];
+        folderPositionDictionary = new Dictionary<int, Vector3>();
 
-        //create startpoint in worldspace as empty GO. leave unparented
-        originGO = Instantiate(originPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+        //if not the root, reference OriginManager for origin as set by parent
+        if (!root) {
+            originPoint = gameObject.GetComponent<OriginManager>().originPoint;
+        } else {
+            originPoint = transform.position;
+        }
+        originGO = Instantiate(originPrefab, originPoint, Quaternion.identity);
         originGO.tag = "Startpoint";
-        originPoint = transform.position;
     }
 	
 	void Update () {
         sphereCenter = transform.position;
 
         Interpolate();
+        ReportOriginsToSubfolders();
         DecideSplay();
 	}
 
@@ -71,16 +79,19 @@ public class June_Rewrite : MonoBehaviour {
         int[] randFileLocations = new int[numFoldersInContents];
         for (int j = 0; j < numFoldersInContents; j++) {
             int randIndex = Random.Range(1, contentsSize);
-            contents[randIndex] = Instantiate(folderPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, gameObject.transform);
-            //contents[randIndex].GetComponent<June_Rewrite>().originSetByParent = true; //mark this folder as a child
+            Vector3 folderPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            contents[randIndex] = Instantiate(folderPrefab, folderPosition, Quaternion.identity, gameObject.transform);
+            contents[randIndex].GetComponent<OriginManager>().originPoint = folderPosition;
+            //add to folder list
+            folderPositionDictionary.Add(randIndex, folderPosition);
         }
     }
 
-    void ActivateFolderSphereColliders() {
-        GameObject[] subfolders;
-        subfolders = GameObject.FindGameObjectsWithTag("Folder");
-        foreach (GameObject subfolder in subfolders) {
-            subfolder.GetComponent<SphereCollider>().enabled = true;
+    void ReportOriginsToSubfolders() {
+        List<int> keys = new List<int>(folderPositionDictionary.Keys);
+        foreach (int key in keys) {
+            Vector3 originToReport = interpolationVectorsArray[key];
+            contents[key].GetComponent<OriginManager>().originPoint = originToReport;
         }
     }
 
@@ -91,7 +102,6 @@ public class June_Rewrite : MonoBehaviour {
             } else { // a first pop!
                 popped = true;
                 InstantiateContents();
-                ActivateFolderSphereColliders();
             }
         } else {
             if (popped) {
