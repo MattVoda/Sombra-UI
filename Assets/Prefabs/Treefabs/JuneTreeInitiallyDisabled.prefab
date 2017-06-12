@@ -29,7 +29,7 @@ GameObject:
   - component: {fileID: 114523884675315164}
   - component: {fileID: 114472611328986702}
   m_Layer: 0
-  m_Name: JuneTreeInitiallyDisabled 1
+  m_Name: JuneTreeInitiallyDisabled
   m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

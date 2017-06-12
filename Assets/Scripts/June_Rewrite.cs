@@ -72,7 +72,7 @@ public class June_Rewrite : MonoBehaviour {
     void InstantiateContents() {
         // First instantiate all as files
         for (int i = 0; i < contentsSize; i++) {
-            GameObject tempKid = Instantiate(filePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, gameObject.transform);
+            GameObject tempKid = Instantiate(filePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity, gameObject.transform) as GameObject;
             contents[i] = tempKid;
         }
         // then overwrite with randomly-placed folders
@@ -80,7 +80,12 @@ public class June_Rewrite : MonoBehaviour {
         for (int j = 0; j < numFoldersInContents; j++) {
             int randIndex = Random.Range(1, contentsSize);
             Vector3 folderPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            contents[randIndex] = Instantiate(folderPrefab, folderPosition, Quaternion.identity, gameObject.transform);
+
+            //Transform objectNew = (Transform)Instantiate(folderPrefab, folderPosition, Quaternion.identity, gameObject.transform);
+
+            contents[randIndex] = Instantiate(folderPrefab, folderPosition, Quaternion.identity, gameObject.transform) as GameObject;
+            
+
             contents[randIndex].GetComponent<OriginManager>().originPoint = folderPosition;
             //add to folder list
             folderPositionDictionary.Add(randIndex, folderPosition);
