@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class June_Rewrite : MonoBehaviour {
+public class June_Rewrite_Child : MonoBehaviour
+{
 
     [Header("Origin Management")]
     public bool root = false;
@@ -43,10 +44,10 @@ public class June_Rewrite : MonoBehaviour {
     private SteamVR_Camera HMD;
 
 
-    void Start () {
+    void Start() {
         HMD = SteamVR_Render.Top();
 
-        kid = new GameObject (); //for use in scaling and transforming
+        kid = new GameObject(); //for use in scaling and transforming
 
         contents = new GameObject[contentsSize];
         interpolationVectorsArray = new Vector3[contentsSize];
@@ -63,8 +64,8 @@ public class June_Rewrite : MonoBehaviour {
         originGO.transform.parent = gameObject.transform;
         originGO.tag = "Startpoint";
     }
-	
-	void Update () {
+
+    void Update() {
         sphereCenter = transform.position;
         if (!root) {
             originPoint = originManagerReference.originPoint;
@@ -77,7 +78,7 @@ public class June_Rewrite : MonoBehaviour {
             ReportOriginsToSubfolders();
         }
         DecideSplay();
-	}
+    }
 
     void InstantiateContents() {
         // First instantiate all as files
@@ -96,7 +97,7 @@ public class June_Rewrite : MonoBehaviour {
             contents[randIndex] = Instantiate(folderPrefab, folderPosition, Quaternion.identity, gameObject.transform) as GameObject;
             contents[randIndex].GetComponent<OriginManager>().originPoint = folderPosition;
 
-            
+
 
             //add to folder list
             folderPositionDictionary.Add(randIndex, folderPosition);

@@ -15,7 +15,8 @@ public class ReportEntry_2 : MonoBehaviour {
     private void OnTriggerStay(Collider other) {
         touched += DC * Time.deltaTime;
         if (touched >= 1) {
-            gameObject.GetComponent<June_Rewrite>().enabled = true;
+            //gameObject.GetComponent<June_Rewrite>().enabled = true;
+            gameObject.GetComponent<June_Rewrite_Child>().enabled = true;
         }
     }
 }

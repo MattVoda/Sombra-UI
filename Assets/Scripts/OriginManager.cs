@@ -9,7 +9,7 @@ public class OriginManager : MonoBehaviour {
 
     public Vector3 originPoint;
 
-
+    public int myIndexInContents;
 
 
 	void Start () {
@@ -18,6 +18,6 @@ public class OriginManager : MonoBehaviour {
 	
 
 	void Update () {
-		
+            //print(myIndexInContents + " origin = " + originPoint);
 	}
 }
