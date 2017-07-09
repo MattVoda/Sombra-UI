@@ -7,9 +7,11 @@ public class June_Rewrite_Child : MonoBehaviour
 
     [Header("Origin Management")]
     public bool root = false;
-    private Vector3 originPoint;
+    public Vector3 originPoint;
+    private Transform originPointTransform;
     private Dictionary<int, Vector3> folderPositionDictionary;
-    private OriginManager originManagerReference;
+    //private OriginManager originManagerReference;
+    public Transform originTransformReferenceFromParent;
 
     [Header("Interpolation")]
     public int contentsSize = 7;
@@ -43,8 +45,7 @@ public class June_Rewrite_Child : MonoBehaviour
 
     private SteamVR_Camera HMD;
 
-
-    void Start() {
+    private void Awake() {
         HMD = SteamVR_Render.Top();
 
         kid = new GameObject(); //for use in scaling and transforming
@@ -52,31 +53,40 @@ public class June_Rewrite_Child : MonoBehaviour
         contents = new GameObject[contentsSize];
         interpolationVectorsArray = new Vector3[contentsSize];
         folderPositionDictionary = new Dictionary<int, Vector3>();
-
-        //if not the root, reference OriginManager for origin as set by parent
-        if (!root) {
-            originManagerReference = gameObject.GetComponent<OriginManager>();
-            originPoint = originManagerReference.originPoint;
-        } else {
-            originPoint = transform.position;
-        }
-        originGO = Instantiate(originPrefab, originPoint, Quaternion.identity);
-        originGO.transform.parent = gameObject.transform;
-        originGO.tag = "Startpoint";
     }
 
-    void Update() {
-        sphereCenter = transform.position;
-        if (!root) {
-            originPoint = originManagerReference.originPoint;
-            print("my originPoint = " + originPoint);
+    void Start() {
+
+        if (originTransformReferenceFromParent) {
+            originPointTransform = originTransformReferenceFromParent;
         }
+        //if not the root, reference OriginManager for origin as set by parent
+        //if (!root) {
+        //    //originManagerReference = gameObject.GetComponent<OriginManager>();
+        //    //originPoint = originManagerReference.originPoint;
+        //    if (originTransformReferenceFromParent) {
+        //        originPointTransform = originTransformReferenceFromParent;
+        //    }
+        //} else {
+        //    originPoint = transform.position;
+        //}
+        //originGO = Instantiate(originPrefab, originPoint, Quaternion.identity);
+        //originGO.transform.parent = gameObject.transform;
+        //originGO.tag = "Startpoint";
+    }
+
+        void Update() {
+        sphereCenter = transform.position;
+        //if (!root) {
+        //    //originPoint = originManagerReference.originPoint;
+        //    //print("my originPoint = " + originPoint);
+        //}
 
 
         Interpolate();
-        if (folderPositionDictionary.Count != 0) {
-            ReportOriginsToSubfolders();
-        }
+        //if (folderPositionDictionary.Count != 0) {
+        //    ReportOriginsToSubfolders();
+        //}
         DecideSplay();
     }
 
@@ -95,7 +105,7 @@ public class June_Rewrite_Child : MonoBehaviour
             //Transform objectNew = (Transform)Instantiate(folderPrefab, folderPosition, Quaternion.identity, gameObject.transform);
 
             contents[randIndex] = Instantiate(folderPrefab, folderPosition, Quaternion.identity, gameObject.transform) as GameObject;
-            contents[randIndex].GetComponent<OriginManager>().originPoint = folderPosition;
+            //contents[randIndex].GetComponent<OriginManager>().originPoint = folderPosition;
 
 
 
@@ -104,14 +114,14 @@ public class June_Rewrite_Child : MonoBehaviour
         }
     }
 
-    void ReportOriginsToSubfolders() {
-        List<int> keys = new List<int>(folderPositionDictionary.Keys);
-        foreach (int key in keys) {
-            Vector3 originToReport = interpolationVectorsArray[key];
-            contents[key].GetComponent<OriginManager>().originPoint = originToReport;
-            print("told child " + key + " its position is " + originToReport);
-        }
-    }
+    //void ReportOriginsToSubfolders() {
+    //    List<int> keys = new List<int>(folderPositionDictionary.Keys);
+    //    foreach (int key in keys) {
+    //        Vector3 originToReport = interpolationVectorsArray[key];
+    //        contents[key].GetComponent<OriginManager>().originPoint = originToReport;
+    //        print("told child " + key + " its position is " + originToReport);
+    //    }
+    //}
 
     void DecideSplay() {
         if (distanceVector.magnitude > minimumPullDistance) {
@@ -163,6 +173,10 @@ public class June_Rewrite_Child : MonoBehaviour
                 iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position));
             }
         }
+        //move and scale originGO
+        //originGO.transform.position = originPoint;
+        //originGO.transform.localScale = folderScaleVector;
+
     }
 
     //public void UnSplay() {
