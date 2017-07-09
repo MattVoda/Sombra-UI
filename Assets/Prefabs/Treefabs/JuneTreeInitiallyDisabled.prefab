@@ -108,12 +108,14 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1658302441489112}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c74a5eedd2afee46bb9d7130612a8fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   root: 0
+  originPoint: {x: 0, y: 0, z: 0}
+  originTransformReferenceFromParent: {fileID: 0}
   contentsSize: 7
   numFoldersInContents: 1
   minimumPullDistance: 0.3
@@ -140,6 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e91c9c85d6ef44db5614327e790f46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myIndexPositionInParent: -1
 --- !u!114 &114505952033707082
 MonoBehaviour:
   m_ObjectHideFlags: 1
