@@ -12,6 +12,8 @@ public class June_Rewrite_Child : MonoBehaviour
     private Dictionary<int, Vector3> folderPositionDictionary;
     //private OriginManager originManagerReference;
     public Transform originTransformReferenceFromParent;
+    public int myIndexInContents = -1;
+    private June_Rewrite parentJR;
 
     [Header("Interpolation")]
     public int contentsSize = 7;
@@ -53,6 +55,8 @@ public class June_Rewrite_Child : MonoBehaviour
         contents = new GameObject[contentsSize];
         interpolationVectorsArray = new Vector3[contentsSize];
         folderPositionDictionary = new Dictionary<int, Vector3>();
+
+        parentJR = GetComponentInParent<June_Rewrite>();
     }
 
     void Start() {
@@ -75,8 +79,11 @@ public class June_Rewrite_Child : MonoBehaviour
         //originGO.tag = "Startpoint";
     }
 
-        void Update() {
+    void Update() {
         sphereCenter = transform.position;
+        originPoint = parentJR.folderOriginGoDictionary[myIndexInContents].transform.position;
+
+        print("child origin = " + originPoint);
         //if (!root) {
         //    //originPoint = originManagerReference.originPoint;
         //    //print("my originPoint = " + originPoint);
@@ -140,6 +147,7 @@ public class June_Rewrite_Child : MonoBehaviour
     }
 
     void Interpolate() {
+        //print("kid origin pos = " + originPoint);
         distanceVector = sphereCenter - originPoint;
         segmentVector = distanceVector / (contentsSize + 2); //+2 to shorten the segments
 

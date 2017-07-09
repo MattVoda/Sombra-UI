@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class June_Rewrite : MonoBehaviour {
@@ -77,9 +78,6 @@ public class June_Rewrite : MonoBehaviour {
 
 
         Interpolate();
-        if (folderPositionDictionary.Count != 0) {
-            ReportOriginsToSubfolders();
-        }
         DecideSplay();
 	}
 
@@ -112,26 +110,20 @@ public class June_Rewrite : MonoBehaviour {
     }
 
     public void EntryReportedByChild(int indexPositionInContents) {
-        print("entry reported by child " + indexPositionInContents);
-
-        if (folderOriginGoDictionary[indexPositionInContents]) {
-            //MAKE AN ORIGIN FOR IT
+        //if it already exists, ignore the report
+        if (folderOriginGoDictionary.ContainsKey(indexPositionInContents)) {
+            return;
+        }
+        //if it is a new addition, add it to the tracking list
+        else {
             GameObject childOrigin = Instantiate(originPrefab, folderPositionDictionary[indexPositionInContents], Quaternion.identity);
-            //ADD TO ORIGINS LIST/DICTIONARY
+            childOrigin.transform.parent = this.gameObject.transform;
             folderOriginGoDictionary.Add(indexPositionInContents, childOrigin);
-            //ASSIGN ORIGIN.TRANSFORM TO CHILD
-            contents[indexPositionInContents].GetComponent<June_Rewrite_Child>().originPoint = childOrigin.transform.position;
+            June_Rewrite_Child jrc = contents[indexPositionInContents].GetComponent<June_Rewrite_Child>();
+            jrc.originPoint = childOrigin.transform.position;
+            jrc.myIndexInContents = indexPositionInContents;
         }
-    }
-
-    void ReportOriginsToSubfolders() {
-        List<int> keys = new List<int>(folderPositionDictionary.Keys);
-        foreach (int key in keys) {
-            Vector3 originToReport = interpolationVectorsArray[key];
-            contents[key].GetComponent<OriginManager>().originPoint = originToReport;
-            //print("told child " + key + " its position is " + originToReport);
-        }
-    }
+    }   
 
     void DecideSplay() {
         if (distanceVector.magnitude > minimumPullDistance) {
@@ -160,18 +152,54 @@ public class June_Rewrite : MonoBehaviour {
         }
     }
 
+
+
+
     void Splay() {
+
         float kidScale = segmentVector.magnitude * fileScaleMultiplier; // *scaleMultiplier probably   //to account for min popping distance
         Vector3 fileScaleVector = new Vector3(Mathf.Clamp(kidScale, 0f, fileMaxSize), Mathf.Clamp(kidScale, 0f, fileMaxSize), Mathf.Clamp(kidScale / 20, 0f, fileThickness));
         Vector3 folderScaleVector = new Vector3(Mathf.Clamp(kidScale * folderScaler, 0f, fileMaxSize), Mathf.Clamp(kidScale * folderScaler, 0f, fileMaxSize), Mathf.Clamp(kidScale * folderScaler, 0f, fileMaxSize));
 
+
+
+
+
+
+        //SPLAY ORIGINS OF POPPED FOLDERS
+        List<int> keys = new List<int>(folderOriginGoDictionary.Keys);
+        foreach (int key in keys) {
+
+            GameObject kidOriginGO = folderOriginGoDictionary[key];
+
+            Vector3 temp = interpolationVectorsArray[key];
+            iTween.MoveUpdate(kidOriginGO, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", sphereCenter));
+            folderOriginGoDictionary[key] = kidOriginGO; //reassign
+
+            print("origin pos = " + kidOriginGO.transform.position);
+            //print("origin localPos = " + kidOriginGO.transform.localPosition);
+
+            //update child's origin
+            contents[key].GetComponent<June_Rewrite_Child>().originPoint = kidOriginGO.transform.position;
+        }
+
+        
+
+
+
+
+        //SPLAY REMAINING CONTENTS
         for (int i = 0; i < contentsSize; i++) {
+
+            //skip splaying kids
+            if (folderOriginGoDictionary.Keys.Contains<int>(i)) continue;
+
             kid = contents[i];
             Vector3 temp = interpolationVectorsArray[i];
 
             if (kid.tag == "File") {
                 kid.transform.localScale = fileScaleVector;
-            } else {
+            } else if (kid.tag == "Folder") {
                 kid.transform.localScale = folderScaleVector;
                 kid.GetComponent<SphereCollider>().radius = folderSphereColliderRadius; // scale collider to prevent rigidbody overlap
                 //kid.GetComponent<June_Rewrite>().originPoint = new Vector3(temp.x, temp.y, temp.z); //untested 6/8
@@ -183,16 +211,8 @@ public class June_Rewrite : MonoBehaviour {
                 iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position));
             }
         }
-        //SPLAY ORIGINS OF POPPED FOLDERS
-        if(folderOriginGoDictionary.Count > 0) {
-            foreach (KeyValuePair<int, GameObject> keyValue in folderOriginGoDictionary) {
-                int key = keyValue.Key;
-                GameObject kidOriginGO = keyValue.Value;
-                Vector3 temp = interpolationVectorsArray[key];
-                iTween.MoveUpdate(kidOriginGO, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", sphereCenter));
-                folderOriginGoDictionary[key] = kidOriginGO; //reassign
-            }
-        }
+
+        
     }
 
     //public void UnSplay() {

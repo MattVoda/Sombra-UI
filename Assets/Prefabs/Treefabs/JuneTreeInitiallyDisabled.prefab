@@ -118,7 +118,7 @@ MonoBehaviour:
   originTransformReferenceFromParent: {fileID: 0}
   contentsSize: 7
   numFoldersInContents: 1
-  minimumPullDistance: 0.3
+  minimumPullDistance: 0.05
   interpMultiplier: 10
   fileScaleMultiplier: 8
   fileMaxSize: 2
