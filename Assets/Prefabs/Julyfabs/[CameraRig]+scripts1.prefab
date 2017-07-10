@@ -442,7 +442,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 0
   origin: {fileID: 0}
-  isValid: 0
 --- !u!114 &114285636917785850
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -456,7 +455,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
-  isValid: 0
 --- !u!114 &114337853238936076
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -535,7 +533,6 @@ MonoBehaviour:
   _head: {fileID: 4207351372905648}
   _ears: {fileID: 4135345334186922}
   wireframe: 0
-  flip: {fileID: 0}
 --- !u!114 &114538779293421950
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -549,7 +546,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
-  isValid: 0
 --- !u!114 &114628226183774646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -592,6 +588,7 @@ MonoBehaviour:
   left: {fileID: 1782550769660866}
   right: {fileID: 1969756410046036}
   objects: []
+  assignAllBeforeIdentified: 0
 --- !u!114 &114812334485378336
 MonoBehaviour:
   m_ObjectHideFlags: 1

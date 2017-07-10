@@ -25,7 +25,6 @@ GameObject:
   - component: {fileID: 54008675052825828}
   - component: {fileID: 114738201674007664}
   - component: {fileID: 114505952033707082}
-  - component: {fileID: 114523884675315164}
   - component: {fileID: 114472611328986702}
   - component: {fileID: 114045527605492882}
   m_Layer: 0
@@ -116,6 +115,7 @@ MonoBehaviour:
   root: 0
   originPoint: {x: 0, y: 0, z: 0}
   originTransformReferenceFromParent: {fileID: 0}
+  myIndexInContents: -1
   contentsSize: 7
   numFoldersInContents: 1
   minimumPullDistance: 0.05
@@ -154,19 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c388bff41862554fa83196a033d331e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114523884675315164
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1658302441489112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48ebe23a8b5b874cb8e287c2f429b2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  originPoint: {x: 0, y: 0, z: 0}
-  myIndexInContents: 0
 --- !u!114 &114738201674007664
 MonoBehaviour:
   m_ObjectHideFlags: 1

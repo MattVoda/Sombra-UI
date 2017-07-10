@@ -9,6 +9,7 @@ TagManager:
   - Startpoint
   - TopFolder
   - SubFolder
+  - Container
   layers:
   - Default
   - TransparentFX
