@@ -26,7 +26,6 @@ GameObject:
   - component: {fileID: 114146392302933984}
   - component: {fileID: 114378810423095142}
   - component: {fileID: 114800522460127890}
-  - component: {fileID: 114215736888526968}
   m_Layer: 0
   m_Name: JuneTree
   m_TagString: Folder
@@ -41,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550914421385062}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.35, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -114,18 +113,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverScale: 1.5
   rigidbody: {fileID: 0}
---- !u!114 &114215736888526968
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1550914421385062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48ebe23a8b5b874cb8e287c2f429b2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  originPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &114378810423095142
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -148,7 +135,7 @@ MonoBehaviour:
   folderScaler: 0.5
   tweeningTime: 0.1
   LookAtHMD: 0
-  folderPrefab: {fileID: 1240932789036918, guid: 9c51236f6beccee4fb38740e4be09638,
+  folderPrefab: {fileID: 1658302441489112, guid: dcbe551ea28ff5e4fab842a2306b2a6f,
     type: 2}
   filePrefab: {fileID: 1000011903837620, guid: ed0e54f7a0813b9418aad9330913764d, type: 2}
   originPrefab: {fileID: 1000013173832620, guid: a2595bac0fcf37148b942a7b7fcfeabc,
