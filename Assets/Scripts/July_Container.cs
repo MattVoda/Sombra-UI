@@ -22,7 +22,7 @@ public class July_Container : MonoBehaviour {
 
     [Header("File Options")]
     public Vector3 startPosition;
-    public float minimumPullDistance = 0.6f; // instantiates and destroy at this distance
+    public float minimumPullDistance = 0.5f; // instantiates and destroy at this distance
     public float interpMultiplier = 1f;
     //public float fileMaxSize = 2f;
     //public float fileThickness = 0.3f;
@@ -30,7 +30,7 @@ public class July_Container : MonoBehaviour {
     public float tweeningTime = 0.1f;
     public bool LookAtHMD = false;
     private float newZ, newY, newX;
-    private GameObject kid;
+    //private GameObject kid;
     private GameObject RedBall;
 
     [Header("Prefabs")]
@@ -44,7 +44,7 @@ public class July_Container : MonoBehaviour {
 
     private void Awake() {
         HMD = SteamVR_Render.Top();
-        kid = new GameObject(); //for use in scaling and transforming
+        //kid = new GameObject(); //for use in scaling and transforming
         contents = new GameObject[contentsSize];
         interpolationVectorsArray = new Vector3[contentsSize];
         //folderPositionDictionary = new Dictionary<int, Vector3>();
@@ -67,9 +67,10 @@ public class July_Container : MonoBehaviour {
         segmentVector = distanceVector / (contentsSize + 2); //+2 to shorten the segments
 
         for (int i = 0; i < contentsSize; i++) {
-            interpolationVectorsArray[i].z = segmentVector.z * (i + 2) * -1 * interpMultiplier; //-1 to reverse direction away from user
-            interpolationVectorsArray[i].y = segmentVector.y * (i + 2) * -1 * interpMultiplier; // i + 2 to shift all items one notch away from sphereCenter
-            interpolationVectorsArray[i].x = segmentVector.x * (i + 2) * -1 * interpMultiplier;
+            interpolationVectorsArray[i].z = segmentVector.z * (i + 1) * interpMultiplier;
+            interpolationVectorsArray[i].y = segmentVector.y * (i + 1) * interpMultiplier;
+            interpolationVectorsArray[i].x = segmentVector.x * (i + 1) * interpMultiplier;
+            interpolationVectorsArray[i] += startPosition; //to move transformations to RedBall start, as opposed to 0,0,0 container pos
         }
     }
 
@@ -107,13 +108,13 @@ public class July_Container : MonoBehaviour {
         Vector3 tempVec = RedBall.transform.position;
         // First instantiate all as files
         for (int i = 0; i < contentsSize; i++) {
-            GameObject tempKid = Instantiate(filePrefab, tempVec, Quaternion.identity, gameObject.transform) as GameObject;
-            contents[i] = tempKid;
+            contents[i] = Instantiate(filePrefab, tempVec, Quaternion.identity, gameObject.transform) as GameObject;
         }
         // then overwrite with randomly-placed folders
         int[] randFileLocations = new int[numFoldersInContents];
         for (int j = 0; j < numFoldersInContents; j++) {
             int randIndex = Random.Range(1, contentsSize);
+            Destroy(contents[randIndex]); //make space for folder
             contents[randIndex] = Instantiate(folderPrefab, tempVec, Quaternion.identity, gameObject.transform) as GameObject;
             //contents[randIndex].GetComponent<ReportEntry_2>().myIndexPositionInParent = randIndex; //tell child its index position
             //folderPositionDictionary.Add(randIndex, tempVec); //add to folder list
@@ -152,7 +153,7 @@ public class July_Container : MonoBehaviour {
             //skip splaying kids
             //if (folderOriginGoDictionary.Keys.Contains<int>(i)) continue;
 
-            kid = contents[i];
+            //kid = contents[i];
             Vector3 temp = interpolationVectorsArray[i];
 
             //if (kid.tag == "File") {
@@ -164,9 +165,9 @@ public class July_Container : MonoBehaviour {
             //}
 
             if (!LookAtHMD) {
-                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", RedBall.transform.position));
+                iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", RedBall.transform.position));
             } else {
-                iTween.MoveUpdate(kid, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position));
+                iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position));
             }
         }
 
