@@ -15,6 +15,7 @@ public class July_Container : MonoBehaviour {
     private Vector3[] interpolationVectorsArray;
 
     private bool popped = false;
+    private bool localPositionReset = false;
     private GameObject originGO;
     private SteamVR_Camera HMD;
 
@@ -43,6 +44,7 @@ public class July_Container : MonoBehaviour {
     void Start () {
         RedBall = Instantiate(RedBallPrefab, startPosition, Quaternion.identity, gameObject.transform);
         originGO = Instantiate(originPrefab, startPosition, Quaternion.identity, gameObject.transform);
+        RedBall.transform.localPosition = new Vector3(0, 0, 0);
     }
 	
 	void Update () {
@@ -52,16 +54,6 @@ public class July_Container : MonoBehaviour {
 
 
 
-    void Interpolate() {
-        distanceVector = RedBall.transform.position - startPosition;
-        segmentVector = distanceVector / (contentsSize + 2); //+2 to shorten the segments
-
-        for (int i = 0; i < contentsSize; i++) {
-            interpolationVectorsArray[i].z = segmentVector.z * (i + 1) * interpMultiplier;
-            interpolationVectorsArray[i].y = segmentVector.y * (i + 1) * interpMultiplier;
-            interpolationVectorsArray[i].x = segmentVector.x * (i + 1) * interpMultiplier;
-        }
-    }
 
     void DecideSplay() {
         if (distanceVector.magnitude > minimumPullDistance) {
@@ -75,6 +67,9 @@ public class July_Container : MonoBehaviour {
             if (popped) {
                 popped = false;
                 DestroyContents();
+            } else if (transform.parent != null && !localPositionReset) {  // hacky fix for pesky misalignment of second-level balls
+                localPositionReset = true;
+                RedBall.transform.localPosition = Vector3.zero;
             }
         }
     }
@@ -94,20 +89,31 @@ public class July_Container : MonoBehaviour {
         }
     }
 
+    void Interpolate() {
+        distanceVector = RedBall.transform.position - startPosition;
+        segmentVector = distanceVector / (contentsSize + 2); //+2 to shorten the segments
+
+        for (int i = 0; i < contentsSize; i++) {
+            interpolationVectorsArray[i].z = segmentVector.z * (i + 1) * interpMultiplier;
+            interpolationVectorsArray[i].y = segmentVector.y * (i + 1) * interpMultiplier;
+            interpolationVectorsArray[i].x = segmentVector.x * (i + 1) * interpMultiplier;
+        }
+    }
+
 
     void Splay() {
         for (int i = 0; i < contentsSize; i++) {
             Vector3 temp = interpolationVectorsArray[i];
 
-            if (contents[i].tag == "Container") {
-                contents[i].GetComponent<July_Container>().startPosition = contents[i].transform.position; //tell the object that its startPos to update against is its container's current pos 
-                //contents[i].GetComponent<SphereCollider>().radius = folderSphereColliderRadius; // scale collider to prevent rigidbody overlap
-            }
-
             if (!LookAtHMD) {
                 iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", RedBall.transform.position));
             } else {
                 iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position));
+            }
+
+            if (contents[i].tag == "Container") {
+                contents[i].GetComponent<July_Container>().startPosition = contents[i].transform.position; //tell the object that its startPos to update against is its container's current pos 
+                //contents[i].GetComponent<SphereCollider>().radius = folderSphereColliderRadius; // scale collider to prevent rigidbody overlap
             }
         }
     }
