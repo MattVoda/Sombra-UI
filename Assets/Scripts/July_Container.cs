@@ -21,7 +21,7 @@ public class July_Container : MonoBehaviour {
 
 
     [Header("File Options")]
-    public Vector3 startPosition;
+    private Vector3 startPosition;
     public float minimumPullDistance = 0.5f; // instantiates and destroy at this distance
     public float interpMultiplier = 1f;
     //public float fileMaxSize = 2f;
@@ -50,11 +50,13 @@ public class July_Container : MonoBehaviour {
         //folderPositionDictionary = new Dictionary<int, Vector3>();
         folderOriginGoDictionary = new Dictionary<int, GameObject>();
         folderPositionDictionary = new Dictionary<int, Vector3>();
+        startPosition = transform.position;
+        print("startPos: " + startPosition);
     }
 
     void Start () {
-        RedBall = Instantiate(RedBallPrefab, startPosition, Quaternion.identity);
-        originGO = Instantiate(originPrefab, startPosition, Quaternion.identity);
+        RedBall = Instantiate(RedBallPrefab, startPosition, Quaternion.identity, gameObject.transform);
+        originGO = Instantiate(originPrefab, startPosition, Quaternion.identity, gameObject.transform);
     }
 	
 	void Update () {
@@ -70,7 +72,7 @@ public class July_Container : MonoBehaviour {
             interpolationVectorsArray[i].z = segmentVector.z * (i + 1) * interpMultiplier;
             interpolationVectorsArray[i].y = segmentVector.y * (i + 1) * interpMultiplier;
             interpolationVectorsArray[i].x = segmentVector.x * (i + 1) * interpMultiplier;
-            interpolationVectorsArray[i] += startPosition; //to move transformations to RedBall start, as opposed to 0,0,0 container pos
+            //interpolationVectorsArray[i] += startPosition; //to move transformations to RedBall start, as opposed to 0,0,0 container pos
         }
     }
 
@@ -116,6 +118,7 @@ public class July_Container : MonoBehaviour {
             int randIndex = Random.Range(1, contentsSize);
             Destroy(contents[randIndex]); //make space for folder
             contents[randIndex] = Instantiate(folderPrefab, tempVec, Quaternion.identity, gameObject.transform) as GameObject;
+            //contents[randIndex].transform.parent = this.gameObject.transform;
             //contents[randIndex].GetComponent<ReportEntry_2>().myIndexPositionInParent = randIndex; //tell child its index position
             //folderPositionDictionary.Add(randIndex, tempVec); //add to folder list
         }
