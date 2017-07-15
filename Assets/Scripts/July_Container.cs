@@ -90,7 +90,25 @@ public class July_Container : MonoBehaviour {
     }
 
     void Interpolate() {
+
+        //if (transform.parent != null) {
+        //    Vector3 redBallWorldPos = RedBall.transform.TransformPoint(transform.position);
+        //    Vector3 startWorldPos = gameObject.transform.TransformPoint(transform.position);
+
+        //    //distanceVector = redBallWorldPos - startWorldPos;
+
+
+        //    //print("local: " + RedBall.transform.position);
+        //    //print("world: " + redBallWorldPos);
+        //    print("local start: " + startPosition);
+        //    print("world start: " + startWorldPos);
+
+        //} else {
+        //    distanceVector = RedBall.transform.position - startPosition;
+        //}
+
         distanceVector = RedBall.transform.position - startPosition;
+
         segmentVector = distanceVector / (contentsSize + 2); //+2 to shorten the segments
 
         for (int i = 0; i < contentsSize; i++) {
@@ -104,16 +122,12 @@ public class July_Container : MonoBehaviour {
     void Splay() {
         for (int i = 0; i < contentsSize; i++) {
             Vector3 temp = interpolationVectorsArray[i];
-
-            if (!LookAtHMD) {
-                iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", RedBall.transform.position));
-            } else {
-                iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position));
-            }
-
+  
             if (contents[i].tag == "Container") {
                 contents[i].GetComponent<July_Container>().startPosition = contents[i].transform.position; //tell the object that its startPos to update against is its container's current pos 
-                //contents[i].GetComponent<SphereCollider>().radius = folderSphereColliderRadius; // scale collider to prevent rigidbody overlap
+                iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime)); //don't rotate folders - will skew deeper levels
+            } else {
+                iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", RedBall.transform.position));
             }
         }
     }
@@ -136,3 +150,7 @@ public class July_Container : MonoBehaviour {
 //    print("Distance vec = " + distanceVector);
 //    print("Distance vec mag = " + distanceVector.magnitude);
 //}
+
+
+//if (!LookAtHMD) {
+//    iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime, "looktarget", HMD.transform.position));
