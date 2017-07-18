@@ -22,9 +22,8 @@ GameObject:
   - component: {fileID: 33202952845504860}
   - component: {fileID: 135134987864509188}
   - component: {fileID: 23188094715306200}
-  - component: {fileID: 114782430130424434}
   m_Layer: 0
-  m_Name: RedBallNoRB
+  m_Name: RedBallNoRBNoII
   m_TagString: Folder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,19 +81,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1151366420264622}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114782430130424434
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1151366420264622}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68d5aeab28d36024fbf1ab8558ce337b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hoverScale: 1.5
-  rigidbody: {fileID: 0}
 --- !u!135 &135134987864509188
 SphereCollider:
   m_ObjectHideFlags: 1

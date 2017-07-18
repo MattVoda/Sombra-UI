@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class July_Container : MonoBehaviour {
+public class July_Child : MonoBehaviour
+{
 
 
     [Header("Interpolation")]
@@ -42,13 +43,13 @@ public class July_Container : MonoBehaviour {
         startPosition = transform.position;
     }
 
-    void Start () {
+    void Start() {
         RedBall = Instantiate(RedBallPrefab, startPosition, Quaternion.identity, gameObject.transform);
         originGO = Instantiate(originPrefab, startPosition, Quaternion.identity, gameObject.transform);
         RedBall.transform.localPosition = new Vector3(0, 0, 0);
     }
-	
-	void Update () {
+
+    void Update() {
         Interpolate();
         DecideSplay();
     }
@@ -108,24 +109,22 @@ public class July_Container : MonoBehaviour {
     void Splay() {
         for (int i = 0; i < contentsSize; i++) {
             Vector3 temp = interpolationVectorsArray[i];
-  
+
             if (contents[i].tag == "Container") {
                 GameObject folderChild = contents[i];
+                folderChild.GetComponent<July_Child>().startPosition = contents[i].transform.position; //tell the object that its startPos to update against is its container's current pos 
+                iTween.MoveUpdate(folderChild, iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime)); //don't rotate folders - will skew deeper levels
 
-                //contents[i].GetComponent<July_Container>().startPosition = contents[i].transform.position; //tell the object that its startPos to update against is its container's current pos 
-                folderChild.GetComponent<July_Container>().startPosition = contents[i].transform.position; //tell the object that its startPos to update against is its container's current pos 
-                iTween.MoveUpdate(contents[i], iTween.Hash("z", temp.z, "y", temp.y, "x", temp.x, "islocal", true, "time", tweeningTime)); //don't rotate folders - will skew deeper levels
-
-                if (!rbsAdded && segmentVector.magnitude > 0.13f) {  //enable rb's on RedBall if segments are longer than radius of RedBall's collider
+                if (segmentVector.magnitude > 0.1f && !rbsAdded) {  //enable rb's on RedBall if segments are longer than radius of RedBall's collider
                     rbsAdded = true;
 
                     Transform t = folderChild.transform;
                     foreach (Transform tr in t) {
                         if (tr.tag == "Folder") {
                             AddRigidbody(tr.gameObject);
-                            tr.gameObject.AddComponent<InteractableItem>();
                         }
                     }
+
                     continue;
                 } else {
                     continue;
@@ -145,7 +144,7 @@ public class July_Container : MonoBehaviour {
         RB.useGravity = false;
         RB.isKinematic = false;
         RB.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        RB.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        //maybe constrain rotation here
     }
 
 

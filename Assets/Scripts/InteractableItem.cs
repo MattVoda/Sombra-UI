@@ -4,9 +4,6 @@ using System.Collections;
 
 public class InteractableItem : MonoBehaviour {
 
-    public float hoverScale = 1.5f;
-    private Vector3 scaleVector;
-    private Vector3 originalScale;
     private bool isScaled = false;
 
     public Rigidbody rigidbody;
@@ -29,9 +26,6 @@ public class InteractableItem : MonoBehaviour {
         rigidbody = GetComponent<Rigidbody>();
         interactionPoint = new GameObject().transform; //an empty object's transform
         velocityFactor /= rigidbody.mass;  //realistic -- bigger mass = smaller velocity factor
-
-        originalScale = gameObject.transform.localScale;
-        scaleVector = originalScale * hoverScale;
 	}
 	
 	// Update is called once per frame
@@ -71,20 +65,4 @@ public class InteractableItem : MonoBehaviour {
     public bool IsInteracting() {
         return currentlyInteracting;
     }
-
-    /*
-    private void OnTriggerEnter(Collider collider) {
-        if (!isScaled) {
-            iTween.ScaleUpdate(gameObject, scaleVector, 0.7f);
-            isScaled = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider collider) {
-        if (isScaled) {
-            iTween.ScaleUpdate(gameObject, originalScale, 0.7f);
-            isScaled = false;
-        }
-    }
-    */
 }
